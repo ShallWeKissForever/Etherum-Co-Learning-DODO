@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const AuctionComponent = ({ initialCooldownTime }) => {
+const CountDown = ({ initialCooldownTime }) => {
     const [cooldownTime, setCooldownTime] = useState(initialCooldownTime);
 
     useEffect(() => {
@@ -21,8 +21,8 @@ const AuctionComponent = ({ initialCooldownTime }) => {
     }, []);
 
     return (
-            <span style={{ color: "red" }}>{cooldownTime}</span>
+            <span style={{ color: "red" }}>{cooldownTime}s</span>
     );
 };
 
-export default AuctionComponent;
+export default CountDown;
