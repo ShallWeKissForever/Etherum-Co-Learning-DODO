@@ -178,7 +178,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"DODO/Auction.sol": "Auction"
+			"Etherum-Co-Learning-DODO/contract/Auction.sol": "Auction"
 		},
 		"evmVersion": "cancun",
 		"libraries": {},
@@ -192,7 +192,7 @@
 		"remappings": []
 	},
 	"sources": {
-		"DODO/Auction.sol": {
+		"Etherum-Co-Learning-DODO/contract/Auction.sol": {
 			"keccak256": "0x434e5b700a1589117e6fc717fbcdd29528b82f39c2ac22293b62e5c7b789632c",
 			"license": "MIT",
 			"urls": [
