@@ -19,6 +19,16 @@ const App = () => {
     useEffect(() => {
         loadWeb3();
         loadBlockchainData();
+
+        // 添加账户切换监听器
+        if (window.ethereum) {
+            window.ethereum.on("accountsChanged", (accounts) => {
+                if (accounts.length > 0) {
+                    setAccount(accounts[0]);
+                    loadBlockchainData(); // 切换账户时重新加载数据
+                }
+            });
+        }
     }, [account]);
 
     const loadWeb3 = async () => {
@@ -35,7 +45,7 @@ const App = () => {
             const accounts = await web3.eth.getAccounts();
             setAccount(accounts[0]);
             
-            const auctionContractAddress = "0x833af5C3E330bFb881b6fdf81f9373752393cCFb";
+            const auctionContractAddress = "0xf2bb2b5887d75243bb33519cbe83bb94ccee68b9";
             const auction = new web3.eth.Contract(AuctionABI, auctionContractAddress);
             setContract(auction);
         
@@ -209,6 +219,13 @@ const App = () => {
                 >
                     Bid
                 </button>
+                {
+                    (Date.now() / 1000) > (auctionEndTime - 300) && (Date.now() / 1000) < auctionEndTime ? (
+                        <span style={{ color: "#53f273", fontWeight: "bold", marginTop: "7px"}}>5% ↑</span>
+                    ) : (
+                        <></>
+                    )
+                }
             </div>
     
             <div style={{ marginBottom: "20px", display: "flex", justifyContent: "center" }}>
