@@ -19,7 +19,7 @@ const App = () => {
     useEffect(() => {
         loadWeb3();
         loadBlockchainData();
-    }, []);
+    }, [account]);
 
     const loadWeb3 = async () => {
         if (window.ethereum) {
@@ -35,7 +35,7 @@ const App = () => {
             const accounts = await web3.eth.getAccounts();
             setAccount(accounts[0]);
             
-            const auctionContractAddress = "0xA3Cc687f4100990D1bc074FA43B81640148Df934";
+            const auctionContractAddress = "0x833af5C3E330bFb881b6fdf81f9373752393cCFb";
             const auction = new web3.eth.Contract(AuctionABI, auctionContractAddress);
             setContract(auction);
         
@@ -115,160 +115,182 @@ const App = () => {
     }
 
     return (
-        <div style={{ 
-            display: "flex", 
-            flexDirection: "column", 
-            alignItems: "center", 
-            justifyContent: "center", 
+        <div style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
             width: "100vw",
+            padding: "20px",
+            fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
         }}>
-
-            <div style={{ 
-                display: "flex", 
-                gap: "20px", 
-                justifyContent: "center", 
-                marginBottom: "10px", 
-                flexWrap: "wrap" 
+            <div style={{
+                display: "flex",
+                gap: "20px",
+                justifyContent: "center",
+                marginBottom: "20px",
+                flexWrap: "wrap"
             }}>
-                <div style={{ 
-                    border: "1px solid grey", 
-                    borderRadius: "20px", 
-                    padding: "10px", 
-                    width: "400px" 
+                <div style={{
+                    border: "1px solid #ddd",
+                    borderRadius: "15px",
+                    padding: "15px",
+                    width: "350px",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                 }}>
-                    <p><strong>My Account:</strong> <br /> {account}</p>
-                    <p><strong>Cooldown Time:</strong> <br /> 
-                    {cooldownTime > Date.now() / 1000 ? 
-                        (<CountDown initialCooldownTime={Math.round((cooldownTime - Date.now() / 1000))} />) : 
-                        (<span style={{ color: "#53f273" }}>Available</span>)
-                    }
+                    <p><strong>My Account:</strong><br /> {account}</p>
+                    <p><strong>Cooldown Time:</strong><br />
+                        {cooldownTime > Date.now() / 1000 ?
+                            (<CountDown initialCooldownTime={Math.round((cooldownTime - Date.now() / 1000))} />) :
+                            (<span style={{ color: "#53f273" }}>Available</span>)
+                        }
                     </p>
-                    <p><strong>Pending Returns:</strong> <br /> {Web3.utils.fromWei(pendingReturns, "ether")} ETH</p>
+                    <p><strong>Pending Returns:</strong><br /> {Web3.utils.fromWei(pendingReturns, "ether")} ETH</p>
                 </div>
-
-                <div style={{ 
-                    border: "1px solid grey", 
-                    borderRadius: "20px", 
-                    padding: "10px", 
-                    width: "400px" 
+    
+                <div style={{
+                    border: "1px solid #ddd",
+                    borderRadius: "15px",
+                    padding: "15px",
+                    width: "350px",
+                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
                 }}>
-                    <p><strong>Highest Bid:</strong> <br /> {Web3.utils.fromWei(highestBid, "ether")} ETH</p>
-                    <p><strong>Target Bid:</strong> <br /> {Web3.utils.fromWei(targetPrice, "ether")} ETH</p>
-                    <p><strong>Highest Bidder:</strong> <br /> {highestBidder}</p>
-                    <p><strong>Auction End Time:</strong> <br /> {new Date(auctionEndTime * 1000).toLocaleString()}</p>
-                    <p><strong>Auction Status:</strong> <br /> 
-                    {
-                        isEmergencyStop ? (
-                            <span style={{ color: "orange" }}>Stopped</span>
-                        ) : ( 
-                            (Date.now() / 1000) > auctionEndTime ? 
-                                (<span style={{ color: "red" }}>Ended</span>) : 
-                                (<span style={{ color: "#53f273" }}>Continuous</span>)
-                        )
-                    }
-
+                    <p><strong>Highest Bid:</strong><br /> {Web3.utils.fromWei(highestBid, "ether")} ETH</p>
+                    <p><strong>Target Bid:</strong><br /> {Web3.utils.fromWei(targetPrice, "ether")} ETH</p>
+                    <p><strong>Highest Bidder:</strong><br /> {highestBidder}</p>
+                    <p><strong>Auction End Time:</strong><br /> {new Date(auctionEndTime * 1000).toLocaleString()}</p>
+                    <p><strong>Auction Status:</strong><br />
+                        {
+                            isEmergencyStop ? (
+                                <span style={{ color: "orange" }}>Stopped</span>
+                            ) : (
+                                (Date.now() / 1000) > auctionEndTime ?
+                                    (<span style={{ color: "red" }}>Ended</span>) :
+                                    (<span style={{ color: "#53f273" }}>Continuous</span>)
+                            )
+                        }
                     </p>
                 </div>
             </div>
-
-            <div style={{ marginBottom: "10px", display: "flex", justifyContent: "center", gap: "10px" }}>
+    
+            <div style={{
+                marginBottom: "20px",
+                display: "flex",
+                justifyContent: "center",
+                gap: "10px"
+            }}>
                 <input
                     type="text"
                     value={bidAmount}
                     onChange={(e) => setBidAmount(e.target.value)}
-                    placeholder=" Enter bid amount in ETH"
-                    style={{ height: "35px", borderRadius: "10px", borderColor: "white" }}
+                    placeholder="Enter bid amount in ETH"
+                    style={{
+                        borderRadius: "8px",
+                        padding: "8px",
+                        border: "1px solid #ddd",
+                        width: "200px",
+                        outline: "none",
+                        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)"
+                    }}
                 />
-                <button 
-                onClick={handleBid}
-                style={{
-                    borderColor: "white",
-                    cursor: "pointer",
-                    transition: "background-color 0.3s, border-color 0.3s", 
-                }}
-                onMouseOver={(e) => e.target.style.backgroundColor = "#888888"}
-                onMouseOut={(e) => e.target.style.backgroundColor = ""}
+                <button
+                    onClick={handleBid}
+                    style={{
+                        padding: "10px 20px",
+                        borderRadius: "8px",
+                        border: "none",
+                        backgroundColor: "#4CAF50",
+                        color: "#fff",
+                        cursor: "pointer",
+                        transition: "background-color 0.3s"
+                    }}
+                    onMouseOver={(e) => e.target.style.backgroundColor = "#45a049"}
+                    onMouseOut={(e) => e.target.style.backgroundColor = "#4CAF50"}
                 >
                     Bid
                 </button>
             </div>
-
-            <div style={{ marginBottom: "10px", display: "flex", justifyContent: "center" }}>
-                <button 
-                onClick={handleWithdraw} 
-                style={{
-                    borderColor: "white",
-                    cursor: "pointer",
-                    transition: "background-color 0.3s, border-color 0.3s", 
-                }}
-                onMouseOver={(e) => e.target.style.backgroundColor = "#888888"}
-                onMouseOut={(e) => e.target.style.backgroundColor = ""}
+    
+            <div style={{ marginBottom: "20px", display: "flex", justifyContent: "center" }}>
+                <button
+                    onClick={handleWithdraw}
+                    style={{
+                        padding: "10px 20px",
+                        borderRadius: "8px",
+                        border: "none",
+                        backgroundColor: "#007BFF",
+                        color: "#fff",
+                        cursor: "pointer",
+                        transition: "background-color 0.3s"
+                    }}
+                    onMouseOver={(e) => e.target.style.backgroundColor = "#0069d9"}
+                    onMouseOut={(e) => e.target.style.backgroundColor = "#007BFF"}
                 >
-
                     Withdraw Returns
                 </button>
             </div>
-
+    
             {isAuctionEnded ? (
-                <p>The income has been settled.</p>
+                <p style={{ color: "#888" }}>The income has been settled.</p>
             ) : (
-                <>
-                    <div>
-                        <button 
-                            onClick={handleEndAuction}
-                            style={{
-                                marginBottom: "10px", 
-                                borderColor: "white",
-                                cursor: "pointer",
-                                transition: "background-color 0.3s, border-color 0.3s",
-                            }}
-                            onMouseOver={(e) => e.target.style.backgroundColor = "#888888"}
-                            onMouseOut={(e) => e.target.style.backgroundColor = ""}
-                        >
-                            Settle 
-                        </button>
-                    </div>
-                </>
+                <div style={{ marginBottom: "20px" }}>
+                    <button
+                        onClick={handleEndAuction}
+                        style={{
+                            padding: "10px 20px",
+                            borderRadius: "8px",
+                            border: "none",
+                            backgroundColor: "#FFC107",
+                            color: "#333",
+                            cursor: "pointer",
+                            transition: "background-color 0.3s"
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = "#e0a800"}
+                        onMouseOut={(e) => e.target.style.backgroundColor = "#FFC107"}
+                    >
+                        Settle
+                    </button>
+                </div>
             )}
-
-            {
-                (Date.now() / 1000) > auctionEndTime ? (
-                    <></>
-                ) : (
-                    <div>
-                        <button 
-                            onClick={handleEmergencyStop}
-                            style={{
-                                marginRight: "5px",
-                                borderColor: "white",
-                                cursor: "pointer",
-                                transition: "background-color 0.3s, border-color 0.3s",
-                            }}
-                            onMouseOver={(e) => e.target.style.backgroundColor = "#888888"} 
-                            onMouseOut={(e) => e.target.style.backgroundColor = ""}
-                        >
-                            Emergency Stop
-                        </button>
-                        <button 
-                            onClick={handleResumeAuction}
-                            style={{
-                                borderColor: "white",
-                                cursor: "pointer",
-                                transition: "background-color 0.3s, border-color 0.3s",
-                            }}
-                            onMouseOver={(e) => e.target.style.backgroundColor = "#888888"} 
-                            onMouseOut={(e) => e.target.style.backgroundColor = ""}
-                        >
-                            Resume Auction
-                        </button>
-                    </div>
-                )
-            }
-
-
-            
+    
+            {(Date.now() / 1000) > auctionEndTime ? null : (
+                <div style={{ display: "flex", justifyContent: "center", gap: "10px" }}>
+                    <button
+                        onClick={handleEmergencyStop}
+                        style={{
+                            padding: "10px 20px",
+                            borderRadius: "8px",
+                            border: "none",
+                            backgroundColor: "#FF5722",
+                            color: "#fff",
+                            cursor: "pointer",
+                            transition: "background-color 0.3s"
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = "#e64a19"}
+                        onMouseOut={(e) => e.target.style.backgroundColor = "#FF5722"}
+                    >
+                        Emergency Stop
+                    </button>
+                    <button
+                        onClick={handleResumeAuction}
+                        style={{
+                            padding: "10px 20px",
+                            borderRadius: "8px",
+                            border: "none",
+                            backgroundColor: "#4CAF50",
+                            color: "#fff",
+                            cursor: "pointer",
+                            transition: "background-color 0.3s"
+                        }}
+                        onMouseOver={(e) => e.target.style.backgroundColor = "#45a049"}
+                        onMouseOut={(e) => e.target.style.backgroundColor = "#4CAF50"}
+                    >
+                        Resume Auction
+                    </button>
+                </div>
+            )}
         </div>
     );
-};
+}    
 
 export default App;

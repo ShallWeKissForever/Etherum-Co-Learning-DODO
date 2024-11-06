@@ -62,17 +62,21 @@ contract Auction {
 
         highestBidder = msg.sender;
 
-        // 时间加权出价奖励、拍卖终局延长机制
-        if (block.timestamp > weightStart && auctionEndTime < maxEndTime) {
+        // 时间加权出价奖励、拍卖终局延长、时间延长上限机制
+        if (block.timestamp > weightStart ) {
             highestBid = (msg.value * 105) / 100;
-            auctionEndTime += 300;
-            weightStart += 300;
+            
+            if (auctionEndTime < maxEndTime) {
+                auctionEndTime += 300;
+                weightStart += 300;
+            }
         } else {
             highestBid = msg.value;
         }
 
         // 如果出价达到了目标价格，拍卖提前结束
         if (highestBid >= targetPrice) {
+            auctionEndTime = block.timestamp;
             endAuction();
             return;
         }
